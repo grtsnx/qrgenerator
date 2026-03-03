@@ -3,93 +3,103 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>qr. — generate. share. connect.</title>
+<title>QR Lab — Create custom QR codes</title>
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&family=Syne:wght@400;600;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-/* ─── Reset ─────────────────────────────────────────────── */
+/* ─── Modern SaaS · Dribbble-inspired ─────────────────────── */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 button { cursor: pointer; font-family: inherit; }
 
-/* ─── Tokens ─────────────────────────────────────────────── */
 :root {
-  --bg:     #07070b;
-  --s1:     #0d0d13;
-  --s2:     #13131c;
-  --s3:     #1b1b28;
-  --bd:     #21212f;
-  --bd2:    #2e2e42;
-  --tx:     #dddad2;
-  --tx-mid: #7b7990;
-  --tx-dim: #3e3d4e;
-  --ac:     #c9ff2e;
-  --ac-dim: rgba(201,255,46,.08);
-  --danger: #ff4e4e;
-  --r:      5px;
-  --r-lg:   10px;
-  --mono:   'DM Mono', monospace;
-  --sans:   'Syne', sans-serif;
+  --bg:         #1a1a1a;
+  --surface:    #242424;
+  --surface-2:  #2a2a2a;
+  --surface-3:  #333;
+  --border:     rgba(255, 255, 255, 0.08);
+  --border-2:   rgba(255, 255, 255, 0.12);
+  --text:       #ffffff;
+  --text-mid:   #a0a0a0;
+  --text-dim:   #707070;
+  --accent:     #a8ff00;
+  --accent-2:   #b8ff20;
+  --accent-glow: rgba(168, 255, 0, 0.2);
+  --accent-soft: rgba(168, 255, 0, 0.12);
+  --danger:     #ef4444;
+  --radius:    12px;
+  --radius-sm:  8px;
+  --radius-lg:  16px;
+  --font:       'Outfit', system-ui, sans-serif;
+  --shadow:     0 4px 20px rgba(0, 0, 0, 0.3);
+  --shadow-lg:  0 16px 40px rgba(0, 0, 0, 0.35);
+  --safe-top:   env(safe-area-inset-top, 0);
+  --safe-bottom: env(safe-area-inset-bottom, 0);
+  --safe-left:  env(safe-area-inset-left, 0);
+  --safe-right: env(safe-area-inset-right, 0);
+  --paper:      var(--bg);
+  --paper-2:    var(--surface-2);
+  --ink:        var(--text);
+  --ink-mid:    var(--text-mid);
+  --ink-dim:    var(--text-dim);
 }
 
-/* ─── Base (mobile-first, no scroll lock) ───────────────── */
-html { background: var(--bg); }
-body {
+html {
   background: var(--bg);
-  color: var(--tx);
-  font-family: var(--mono);
-  font-size: 13px;
-  line-height: 1.5;
-  -webkit-font-smoothing: antialiased;
+  scroll-behavior: smooth;
+}
+body {
+  font-family: var(--font);
+  font-size: 15px;
+  line-height: 1.55;
+  color: var(--text);
   min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  background: var(--bg);
 }
 
-/* noise overlay */
+/* Subtle noise */
 body::after {
   content: '';
   position: fixed; inset: 0;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='.035'/%3E%3C/svg%3E");
-  background-size: 180px;
+  background: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.02'/%3E%3C/svg%3E");
   pointer-events: none; z-index: 9999;
 }
 
-/* ─── App Shell ──────────────────────────────────────────── */
 .app {
-  display: grid;
-  grid-template-rows: 50px auto;
   min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  max-width: 1400px;
+  margin: 0 auto;
 }
 
 /* ─── Header ─────────────────────────────────────────────── */
 header {
   display: flex;
   align-items: center;
-  padding: 0 16px;
-  background: var(--s1);
-  border-bottom: 1px solid var(--bd);
+  flex-wrap: wrap;
+  gap: 16px 24px;
+  padding: 20px 24px;
+  background: var(--bg);
+  border-bottom: 1px solid var(--border);
   position: sticky;
   top: 0;
   z-index: 100;
-  gap: 0;
 }
 
 .brand {
-  font-family: var(--mono);
-  font-size: 20px;
-  font-weight: 500;
-  color: var(--ac);
-  letter-spacing: -.02em;
-  user-select: none;
-  padding-right: 16px;
-  margin-right: 16px;
-  border-right: 1px solid var(--bd);
-  white-space: nowrap;
-  flex-shrink: 0;
+  font-family: var(--font);
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: var(--accent);
+  letter-spacing: -0.02em;
 }
 
 .type-pills {
   display: flex;
-  gap: 3px;
+  gap: 8px;
   flex: 1;
   min-width: 0;
   overflow-x: auto;
@@ -98,403 +108,546 @@ header {
 .type-pills::-webkit-scrollbar { display: none; }
 
 .pill {
-  font-family: var(--mono);
-  font-size: 11px;
-  padding: 4px 10px;
+  font-family: var(--font);
+  font-size: 13px;
+  font-weight: 500;
+  padding: 9px 16px;
   border-radius: 100px;
-  border: 1px solid transparent;
+  border: 1px solid var(--border-2);
   background: transparent;
-  color: var(--tx-dim);
-  transition: all .14s;
-  letter-spacing: .05em;
+  color: var(--text-dim);
+  transition: all 0.2s ease;
   white-space: nowrap;
-  flex-shrink: 0;
 }
-.pill:hover  { color: var(--tx-mid); border-color: var(--bd2); }
-.pill.active { background: var(--ac-dim); border-color: var(--ac); color: var(--ac); }
+.pill:hover { color: var(--text-mid); border-color: var(--text-mid); }
+.pill.active {
+  border: 2px solid var(--accent);
+  background: transparent;
+  color: var(--accent);
+  padding: 8px 15px;
+}
 
 .hdr-tag {
-  font-size: 10px;
-  color: var(--tx-dim);
-  letter-spacing: .1em;
-  white-space: nowrap;
-  display: none; /* hidden on mobile */
+  font-size: 12px;
+  color: var(--text-dim);
+  display: none;
   align-items: center;
-  gap: 7px;
+  gap: 8px;
 }
 .dot-live {
-  width: 5px; height: 5px;
-  border-radius: 50%; background: var(--ac);
-  animation: blink 2.4s ease-in-out infinite;
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 8px var(--accent-glow);
+  animation: pulse 2s ease-in-out infinite;
 }
-@keyframes blink { 0%,100%{opacity:1} 50%{opacity:.2} }
+@keyframes pulse { 0%,100%{ opacity:1 } 50%{ opacity:.4 } }
 
-/* ─── Main — mobile: single column ──────────────────────── */
+/* ─── Main layout ────────────────────────────────────────── */
 .main {
   display: grid;
   grid-template-columns: 1fr;
+  flex: 1;
+  padding: 24px;
+  gap: 24px;
 }
 .col-div { display: none; }
 
-/* ─── Panels ─────────────────────────────────────────────── */
 .left {
   display: flex;
   flex-direction: column;
-  padding: 16px;
-  gap: 14px;
-  border-bottom: 1px solid var(--bd);
+  gap: 20px;
+  animation: fadeUp 0.5s ease-out;
 }
+@keyframes fadeUp { from { opacity:0; transform:translateY(10px) } to { opacity:1; transform:translateY(0) } }
 
 .right {
   display: flex;
   flex-direction: column;
-  padding: 16px;
-  gap: 14px;
+  gap: 20px;
+  animation: fadeUp 0.5s ease-out 0.1s both;
 }
 
-/* ─── Labels ─────────────────────────────────────────────── */
+/* ─── Cards & panels ─────────────────────────────────────── */
+.card {
+  background: var(--surface-2);
+  border-radius: var(--radius);
+  padding: 24px;
+  border: 1px solid var(--border);
+  transition: border-color 0.2s ease;
+}
+.card:hover { border-color: var(--border-2); }
+
 .lbl {
-  font-size: 9px;
+  font-size: 11px;
   font-weight: 600;
-  letter-spacing: .14em;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--tx-dim);
-  margin-bottom: 7px;
-  font-family: var(--sans);
+  color: var(--text-dim);
+  margin-bottom: 12px;
+  font-family: var(--font);
 }
 
 /* ─── Inputs ─────────────────────────────────────────────── */
 .type-view { display: none; }
 .type-view.on { display: block; }
 
-input[type=text], input[type=url], input[type=email],
-input[type=tel],  input[type=password], textarea, select {
+input[type=text], input[type=url], input[type=email], input[type=tel], input[type=password], textarea, select {
   width: 100%;
-  background: var(--s2);
-  border: 1px solid var(--bd);
-  border-radius: var(--r);
-  color: var(--tx);
-  font-family: var(--mono);
-  font-size: 13px;
-  padding: 10px 12px;
+  font-family: var(--font);
+  font-size: 15px;
+  padding: 14px 16px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--bg);
+  color: var(--text);
   outline: none;
-  transition: border-color .13s, box-shadow .13s;
+  transition: border-color 0.2s, box-shadow 0.2s;
   appearance: none;
-  -webkit-appearance: none;
 }
 input:focus, textarea:focus, select:focus {
-  border-color: var(--ac);
-  box-shadow: 0 0 0 2px var(--ac-dim);
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px var(--accent-soft);
 }
-input::placeholder, textarea::placeholder { color: var(--tx-dim); }
-textarea { resize: none; height: 72px; line-height: 1.6; }
+input::placeholder, textarea::placeholder { color: var(--text-dim); }
+textarea { resize: vertical; min-height: 80px; line-height: 1.5; }
 
 select {
   cursor: pointer;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath fill='%233e3d4e' d='M5 6L0 0h10z'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath fill='%23707070' d='M6 8L0 0h12z'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
-  background-position: right 10px center;
-  padding-right: 28px;
+  background-position: right 14px center;
+  padding-right: 36px;
 }
-select option { background: var(--s2); }
-.stack { display: flex; flex-direction: column; gap: 8px; }
+.stack { display: flex; flex-direction: column; gap: 10px; }
 
-/* ─── Options ─────────────────────────────────────────────── */
-.opts { display: flex; flex-direction: column; gap: 14px; }
+/* ─── Options & buttons ─────────────────────────────────── */
+.opts { display: flex; flex-direction: column; gap: 18px; }
 .opt-row { display: flex; flex-direction: column; }
 
-/* color pickers */
-.color-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-.clr-wrap   { display: flex; flex-direction: column; gap: 4px; }
-.clr-lbl    { font-size: 10px; color: var(--tx-dim); }
+.color-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.clr-wrap { display: flex; flex-direction: column; gap: 6px; }
+.clr-lbl { font-size: 12px; color: var(--text-dim); font-family: var(--font); }
 .clr-row {
-  display: flex; align-items: center; gap: 8px;
-  background: var(--s2); border: 1px solid var(--bd);
-  border-radius: var(--r); padding: 7px 10px;
-  cursor: pointer; transition: border-color .13s;
+  display: flex; align-items: center; gap: 10px;
+  padding: 12px 14px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: border-color 0.2s;
 }
-.clr-row:hover { border-color: var(--bd2); }
+.clr-row:hover { border-color: var(--border-2); }
 .swatch {
-  width: 18px; height: 18px;
-  border-radius: 3px;
-  border: 1px solid rgba(255,255,255,.08);
+  width: 24px; height: 24px;
+  border-radius: 8px;
+  border: 1px solid rgba(255,255,255,.15);
   flex-shrink: 0;
 }
-.hex-val { font-size: 11px; color: var(--tx-mid); flex: 1; }
+.hex-val { font-size: 12px; color: var(--text-mid); flex: 1; font-family: var(--font); }
 input[type=color] { position: absolute; width: 0; height: 0; opacity: 0; pointer-events: none; }
 
-/* option button groups */
-.btn-g { display: flex; gap: 3px; }
+.btn-g { display: flex; gap: 8px; flex-wrap: wrap; }
 .og {
   flex: 1;
-  font-family: var(--mono);
-  font-size: 11px;
-  padding: 7px 0;
-  background: var(--s2);
-  border: 1px solid var(--bd);
-  border-radius: var(--r);
-  color: var(--tx-mid);
-  text-align: center;
-  transition: all .12s;
-}
-.og:hover { border-color: var(--bd2); color: var(--tx); }
-.og.on    { background: var(--ac-dim); border-color: var(--ac); color: var(--ac); }
-
-/* ─── Generate button ─────────────────────────────────────── */
-.btn-gen {
-  width: 100%;
-  padding: 13px;
-  background: var(--ac);
-  border: 2px solid var(--ac);
-  border-radius: var(--r);
-  color: #07070b;
-  font-family: var(--mono);
+  min-width: 52px;
+  font-family: var(--font);
   font-size: 13px;
   font-weight: 500;
-  letter-spacing: .04em;
+  padding: 10px 14px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--text-mid);
+  text-align: center;
+  transition: all 0.2s;
+}
+.og:hover { border-color: var(--border-2); color: var(--text); }
+.og.on { border: 2px solid var(--accent); color: var(--accent); background: transparent; padding: 9px 13px; }
+
+/* Generate button */
+.btn-gen {
+  width: 100%;
+  padding: 18px 24px;
+  font-family: var(--font);
+  font-size: 16px;
+  font-weight: 600;
+  color: #1a1a1a;
+  background: var(--accent);
+  border: none;
+  border-radius: var(--radius);
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
-  transition: background .13s, transform .1s;
-  flex-shrink: 0;
+  gap: 10px;
+  transition: background 0.2s, opacity 0.2s;
 }
-.btn-gen:hover  { background: #d5ff4a; border-color: #d5ff4a; }
-.btn-gen:active { transform: scale(.98); }
-.btn-gen.busy   { opacity: .6; cursor: wait; pointer-events: none; }
+.btn-gen:hover { background: var(--accent-2); }
+.btn-gen:active { opacity: 0.95; }
+.btn-gen.busy { opacity: 0.7; cursor: wait; pointer-events: none; }
 
 /* ─── Preview zone ────────────────────────────────────────── */
 .preview-zone {
-  width: 100%;
-  height: 300px;
+  aspect-ratio: 1;
+  max-height: min(420px, 55vw);
   display: flex;
   align-items: center;
   justify-content: center;
-  background-image:
-    linear-gradient(var(--bd) 1px, transparent 1px),
-    linear-gradient(90deg, var(--bd) 1px, transparent 1px);
-  background-size: 22px 22px;
-  background-position: -1px -1px;
-  border-radius: var(--r-lg);
-  border: 1px solid var(--bd);
   position: relative;
   overflow: hidden;
+  background-color: var(--surface-2);
+  background-image:
+    linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+  background-size: 20px 20px;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border);
+  --corner: 24px;
 }
-.preview-zone::before, .preview-zone::after {
+/* L-shaped corner brackets via SVG */
+.preview-zone::before {
   content: '';
   position: absolute;
-  width: 20px; height: 20px;
-  border-color: var(--ac);
-  border-style: solid;
-  border-width: 0;
-}
-.preview-zone::before {
-  top: 10px; left: 10px;
-  border-top-width: 2px; border-left-width: 2px;
-  border-radius: 3px 0 0 0;
-}
-.preview-zone::after {
-  bottom: 10px; right: 10px;
-  border-bottom-width: 2px; border-right-width: 2px;
-  border-radius: 0 0 3px 0;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100' preserveAspectRatio='none'%3E%3Cpath d='M12 2h2v10h10v2H12z' fill='none' stroke='%23a8ff00' stroke-width='2'/%3E%3Cpath d='M88 2h-2v10H76v2h12z' fill='none' stroke='%23a8ff00' stroke-width='2'/%3E%3Cpath d='M12 98v-2h10V86h2v12z' fill='none' stroke='%23a8ff00' stroke-width='2'/%3E%3Cpath d='M88 98v-2H76V86h-2v12z' fill='none' stroke='%23a8ff00' stroke-width='2'/%3E%3C/svg%3E");
+  background-size: 100% 100%;
+  padding: 12px;
+  background-origin: content-box;
+  background-repeat: no-repeat;
 }
 
-.qr-wrap {
-  position: relative;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-}
-
-/* scan line */
+.qr-wrap { position: relative; display: inline-flex; align-items: center; justify-content: center; }
 .scan-line {
-  position: absolute; left: 0; right: 0; height: 2px;
-  background: linear-gradient(90deg, transparent, var(--ac), transparent);
+  position: absolute; left: 0; right: 0; height: 3px;
+  background: linear-gradient(90deg, transparent, var(--accent), transparent);
   opacity: 0; top: 0; pointer-events: none;
 }
-.scanning .scan-line {
-  animation: scandown .55s cubic-bezier(.4,0,.6,1) forwards;
-}
+.scanning .scan-line { animation: scandown 0.6s ease-out forwards; }
 @keyframes scandown {
-  0%   { top: 0;    opacity: 0; }
-  10%  {            opacity: .9; }
-  90%  {            opacity: .7; }
+  0% { top: 0; opacity: 0; }
+  15% { opacity: 0.9; }
+  85% { opacity: 0.7; }
   100% { top: 100%; opacity: 0; }
 }
 
 #qr-canvas {
   display: none;
-  border-radius: 4px;
-  max-width:  min(520px, calc(100% - 40px));
-  max-height: min(520px, 55vh);
+  border-radius: var(--radius-sm);
+  max-width: min(520px, 100%);
+  max-height: 100%;
   width: auto !important;
   height: auto !important;
 }
+.qr-fresh { animation: qrPop 0.35s ease-out; }
+@keyframes qrPop { from { opacity: 0; transform: scale(0.96) } to { opacity: 1; transform: scale(1) } }
 
-@keyframes qr-appear {
-  from { opacity: 0; transform: scale(.97); }
-  to   { opacity: 1; transform: scale(1); }
-}
-.qr-fresh { animation: qr-appear .22s ease-out; }
-
-/* placeholder */
 .ph {
   display: flex; flex-direction: column;
   align-items: center; justify-content: center;
-  gap: 12px; color: var(--tx-dim);
+  gap: 14px; color: var(--text-dim);
 }
 .ph-grid {
   display: grid;
-  grid-template-columns: repeat(7, 9px);
-  grid-template-rows: repeat(7, 9px);
-  gap: 2px; opacity: .18;
+  grid-template-columns: repeat(7, 10px);
+  grid-template-rows: repeat(7, 10px);
+  gap: 2px;
+  opacity: 0.3;
 }
-.ph-cell { border-radius: 1.5px; background: var(--tx-mid); }
-.ph-txt  { font-size: 11px; letter-spacing: .06em; }
+.ph-cell { border-radius: 2px; background: var(--text-mid); }
+.ph-txt { font-size: 13px; font-family: var(--font); }
 
-/* ─── Action buttons ──────────────────────────────────────── */
-.actions { display: flex; gap: 7px; }
+/* ─── Tabs ────────────────────────────────────────────────── */
+.left-tabs {
+  display: flex;
+  gap: 4px;
+  padding: 4px;
+  background: var(--bg);
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+}
+.left-tabs .tab {
+  flex: 1;
+  font-family: var(--font);
+  font-size: 13px;
+  font-weight: 500;
+  padding: 10px 16px;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--text-dim);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.left-tabs .tab:hover { color: var(--text-mid); }
+.left-tabs .tab.active {
+  background: var(--accent);
+  color: #1a1a1a;
+}
+.tab-pane { display: none; flex-direction: column; gap: 18px; }
+.tab-pane.on { display: flex; }
 
+.marker-opts .btn-g { margin-top: 8px; }
+.marker-btn {
+  width: 48px; height: 48px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--text);
+  transition: all 0.2s;
+}
+.marker-btn:hover { border-color: var(--border-2); }
+.marker-btn.selected { border: 2px solid var(--accent); background: transparent; color: var(--accent); }
+.marker-btn svg { width: 26px; height: 26px; }
+
+/* ─── Actions & buttons ──────────────────────────────────── */
+.actions { display: flex; gap: 12px; }
 .btn {
   flex: 1;
-  font-family: var(--mono);
-  font-size: 12px;
-  padding: 10px 14px;
-  border-radius: var(--r);
-  border: 1px solid var(--bd);
-  background: var(--s2);
-  color: var(--tx-mid);
-  transition: all .13s;
-  display: flex; align-items: center; justify-content: center; gap: 6px;
-  white-space: nowrap;
+  font-family: var(--font);
+  font-size: 14px;
+  font-weight: 500;
+  padding: 12px 18px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  background: var(--surface-2);
+  color: var(--text-mid);
+  transition: all 0.2s;
+  display: flex; align-items: center; justify-content: center; gap: 8px;
 }
-.btn:hover:not(:disabled) { border-color: var(--bd2); color: var(--tx); }
-.btn:disabled { opacity: .28; cursor: not-allowed; }
-
+.btn:hover:not(:disabled) { border-color: var(--border-2); color: var(--text); }
+.btn:disabled { opacity: 0.4; cursor: not-allowed; }
 .btn-dl {
-  background: var(--ac); border-color: var(--ac);
-  color: #07070b; font-weight: 500;
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #1a1a1a;
 }
-.btn-dl:hover:not(:disabled) { background: #d5ff4a; border-color: #d5ff4a; }
-.btn-dl:disabled { background: var(--s2); border-color: var(--bd); color: var(--tx-dim); }
+.btn-dl:hover:not(:disabled) { background: var(--accent-2); border-color: var(--accent-2); }
+.btn-dl:disabled { background: var(--surface-2); border: 1px solid var(--border); color: var(--text-dim); }
 
 .btn-reset {
   width: 100%;
-  font-size: 11px;
-  padding: 8px 12px;
-  color: var(--tx-dim);
+  font-size: 13px;
+  padding: 10px 16px;
+  color: var(--text-dim);
   background: transparent;
-  border: 1px dashed var(--bd);
+  border: 1px dashed var(--border);
+  border-radius: var(--radius-sm);
+  font-family: var(--font);
 }
-.btn-reset:hover { color: var(--tx-mid); border-color: var(--bd2); }
+.btn-reset:hover { color: var(--text-mid); border-color: var(--text-dim); }
+
+.logo-upload { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
+.logo-name { font-size: 13px; color: var(--text-dim); max-width: 160px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-family: var(--font); }
+.btn-upload { flex-shrink: 0; border: 1px solid rgba(255,255,255,0.5); background: var(--bg); color: var(--text); }
+.btn-upload:hover { border-color: var(--text); }
+.btn-remove-logo { font-size: 12px; padding: 8px 12px; color: var(--text); background: var(--danger); border: none; font-family: var(--font); }
+.btn-remove-logo:hover { background: #dc2626; }
+
+/* ─── Style picker ───────────────────────────────────────── */
+.style-picker { display: none; margin-top: 16px; }
+.style-picker.on { display: block; }
+.style-options { display: flex; gap: 12px; flex-wrap: wrap; }
+.style-option {
+  flex: 1;
+  min-width: 96px;
+  max-width: 130px;
+  cursor: pointer;
+  border: 2px solid var(--border);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  background: var(--surface-2);
+  transition: all 0.2s;
+}
+.style-option:hover { border-color: var(--border-2); }
+.style-option.selected { border-color: var(--accent); }
+.style-option canvas { width: 100%; height: auto; display: block; }
+.style-option .style-name { font-size: 11px; text-align: center; padding: 8px 0; color: var(--text-dim); font-weight: 500; font-family: var(--font); }
 
 /* ─── History ─────────────────────────────────────────────── */
-.hist-hdr {
-  display: flex; align-items: center;
-  justify-content: space-between; margin-bottom: 9px;
-}
+.hist-hdr { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
 .btn-clr {
-  font-size: 10px; color: var(--tx-dim);
+  font-size: 12px; color: var(--text-dim);
   background: none; border: none;
-  font-family: var(--mono); transition: color .1s; padding: 0;
+  cursor: pointer;
+  transition: color 0.2s;
+  font-family: var(--font);
 }
 .btn-clr:hover { color: var(--danger); }
 
-.hist-row {
-  display: flex; gap: 7px;
-  overflow-x: auto; padding-bottom: 4px;
-}
-.hist-row::-webkit-scrollbar { height: 2px; }
-.hist-row::-webkit-scrollbar-thumb { background: var(--bd); border-radius: 1px; }
+.hist-row { display: flex; gap: 12px; overflow-x: auto; padding-bottom: 8px; }
+.hist-row::-webkit-scrollbar { height: 6px; }
+.hist-row::-webkit-scrollbar-track { background: rgba(255,255,255,0.03); border-radius: 3px; }
+.hist-row::-webkit-scrollbar-thumb { background: var(--border-2); border-radius: 3px; }
 
 .hist-item {
-  flex-shrink: 0; display: flex; flex-direction: column;
-  gap: 4px; cursor: pointer;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  cursor: pointer;
+  transition: transform 0.2s ease;
 }
+.hist-item:hover { transform: translateY(-2px); }
 .hist-thumb {
-  width: 56px; height: 56px;
-  border: 1px solid var(--bd); border-radius: 4px;
-  overflow: hidden; background: white;
-  transition: border-color .13s;
+  width: 64px; height: 64px;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  background: var(--surface-3);
+  border: 1px solid var(--border);
+  transition: border-color 0.2s;
 }
-.hist-item:hover .hist-thumb { border-color: var(--ac); }
-.hist-thumb img { width: 56px; height: 56px; display: block; }
+.hist-item:hover .hist-thumb { border-color: var(--accent); }
+.hist-thumb img { width: 64px; height: 64px; display: block; object-fit: cover; }
 .hist-lbl {
-  font-size: 9px; color: var(--tx-dim);
-  width: 56px; overflow: hidden;
-  text-overflow: ellipsis; white-space: nowrap;
+  font-size: 11px;
+  color: var(--text-dim);
+  width: 64px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
   text-align: center;
+  font-family: var(--font);
 }
-.hist-empty { font-size: 10px; color: var(--tx-dim); padding: 4px 0; }
+.hist-empty { font-size: 13px; color: var(--text-dim); padding: 8px 0; font-family: var(--font); }
 
 /* ─── Toast ──────────────────────────────────────────────── */
 .toast {
-  position: fixed; bottom: 20px; left: 50%;
-  transform: translateX(-50%) translateY(52px);
-  background: var(--s3); border: 1px solid var(--bd2);
-  color: var(--tx); font-size: 11px;
-  padding: 8px 18px; border-radius: 100px;
-  font-family: var(--mono);
-  transition: transform .2s cubic-bezier(.34,1.56,.64,1), opacity .2s;
-  opacity: 0; z-index: 10000; pointer-events: none;
+  position: fixed;
+  bottom: calc(28px + var(--safe-bottom));
+  left: 50%;
+  transform: translateX(-50%) translateY(20px);
+  padding: 14px 28px;
+  font-family: var(--font);
+  font-size: 14px;
+  font-weight: 500;
+  color: #1a1a1a;
+  background: var(--accent);
+  border-radius: 100px;
+  opacity: 0;
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.3s;
+  z-index: 10000;
+  pointer-events: none;
   white-space: nowrap;
 }
 .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
 
-/* ─── Desktop layout (≥ 860px): two columns, no scroll ──── */
-@media (min-width: 860px) {
-  html, body { height: 100%; overflow: hidden; }
-  .app { height: 100vh; grid-template-rows: 50px 1fr; overflow: hidden; }
-  .main { grid-template-columns: 370px 1px 1fr; overflow: hidden; }
-  .col-div { display: block; background: var(--bd); }
-  .hdr-tag { display: flex; }
-
-  .left {
-    overflow: hidden;
-    border-bottom: none;
-    padding: 18px;
+/* ─── Mobile-first: touch & safe area ─────────────────────── */
+@media (max-width: 899px) {
+  .app { padding-left: var(--safe-left); padding-right: var(--safe-right); }
+  header {
+    padding: 14px 16px 14px max(16px, var(--safe-left));
+    padding-right: max(16px, var(--safe-right));
+    gap: 12px 16px;
   }
-  .opts { flex: 1; overflow: hidden; }
-
-  .right {
-    overflow: hidden;
-    padding: 18px 22px;
+  .brand { font-size: 1.35rem; }
+  .type-pills { order: 3; width: 100%; margin: 0 -4px; padding: 4px 0; -webkit-overflow-scrolling: touch; }
+  .pill {
+    padding: 10px 16px;
+    min-height: 44px;
+    font-size: 14px;
+  }
+  .main {
+    padding: 16px max(16px, var(--safe-left)) 24px max(16px, var(--safe-right));
+    padding-bottom: calc(24px + var(--safe-bottom));
+    gap: 20px;
+  }
+  .card { padding: 16px; }
+  .left-tabs .tab {
+    padding: 12px 14px;
+    min-height: 44px;
+    font-size: 14px;
+  }
+  input[type=text], input[type=url], input[type=email], input[type=tel], input[type=password], textarea, select {
+    padding: 14px 16px;
+    min-height: 48px;
+    font-size: 16px;
+  }
+  textarea { min-height: 96px; }
+  .btn-gen {
+    padding: 18px 24px;
+    min-height: 52px;
+    font-size: 17px;
+  }
+  .actions { flex-wrap: wrap; }
+  .actions .btn {
+    min-height: 48px;
+    padding: 14px 18px;
   }
   .preview-zone {
-    flex: 1;
-    height: auto;
-    min-height: 0;
+    max-height: min(380px, 75vw);
+    min-height: 200px;
   }
-  #qr-canvas {
-    max-width:  min(520px, calc(100% - 40px));
-    max-height: min(520px, 55vh);
+  .style-options { gap: 10px; }
+  .style-option { min-width: 80px; max-width: 120px; }
+  .marker-btn {
+    width: 52px;
+    height: 52px;
+    min-width: 52px;
+    min-height: 52px;
   }
+  .hist-row { padding-bottom: 8px; -webkit-overflow-scrolling: touch; }
+  .hist-thumb { width: 56px; height: 56px; }
+  .hist-thumb img { width: 56px; height: 56px; }
+  .hist-lbl { width: 56px; }
+}
+@media (max-width: 480px) {
+  header { flex-direction: column; align-items: stretch; }
+  .brand { text-align: center; }
+  .type-pills { justify-content: flex-start; }
+  .color-grid { grid-template-columns: 1fr; }
+  .btn-g { gap: 8px; }
+}
+
+/* ─── Desktop ─────────────────────────────────────────────── */
+@media (min-width: 900px) {
+  .main {
+    grid-template-columns: 380px 1px 1fr;
+    padding: 32px 40px;
+    gap: 32px;
+    align-items: start;
+  }
+  .col-div { display: block; background: var(--border); min-height: 400px; }
+  .hdr-tag { display: flex; }
+  .left { max-height: calc(100vh - 100px); overflow-y: auto; }
+  .right { min-height: 0; }
+  .preview-zone { max-height: 420px; aspect-ratio: 1; }
 }
 </style>
 </head>
 <body>
 <div class="app">
 
-  <!-- Header -->
   <header>
     <div class="brand">qr.</div>
     <nav class="type-pills" id="type-pills">
-      <button class="pill active" data-type="url">url</button>
-      <button class="pill"        data-type="text">text</button>
-      <button class="pill"        data-type="email">email</button>
-      <button class="pill"        data-type="phone">phone</button>
-      <button class="pill"        data-type="wifi">wifi</button>
+      <button class="pill active" data-type="url">URL</button>
+      <button class="pill" data-type="text">Text</button>
+      <button class="pill" data-type="email">Email</button>
+      <button class="pill" data-type="phone">Phone</button>
+      <button class="pill" data-type="wifi">Wi‑Fi</button>
     </nav>
     <div class="hdr-tag">
-      <span class="dot-live"></span>generate · share · connect
+      <span class="dot-live"></span>
+      <span>generate · share · connect</span>
     </div>
   </header>
 
-  <div class="main">
+  <main class="main">
+    <aside class="left card">
 
-    <!-- ── Left Panel ── -->
-    <div class="left">
+      <nav class="left-tabs" id="left-tabs">
+        <button type="button" class="tab active" data-tab="input">Input</button>
+        <button type="button" class="tab" data-tab="style">Style</button>
+        <button type="button" class="tab" data-tab="options">Options</button>
+      </nav>
 
+      <div class="tab-pane on" id="pane-input">
       <!-- Input -->
       <div class="input-wrap">
         <div class="lbl">input</div>
@@ -528,6 +681,36 @@ input[type=color] { position: absolute; width: 0; height: 0; opacity: 0; pointer
         </div>
       </div>
 
+      </div><!-- /pane-input -->
+
+      <div class="tab-pane" id="pane-style">
+        <div class="opt-row">
+          <div class="lbl">dots</div>
+          <div class="btn-g" id="dot-style-btns">
+            <button type="button" class="marker-btn selected" data-dot="standard" title="Square">□</button>
+            <button type="button" class="marker-btn" data-dot="dots" title="Circle">○</button>
+            <button type="button" class="marker-btn" data-dot="rounded" title="Rounded">▢</button>
+            <button type="button" class="marker-btn" data-dot="instagram" title="Instagram">◇</button>
+          </div>
+        </div>
+        <div class="opt-row marker-opts">
+          <div class="lbl">marker border</div>
+          <div class="btn-g">
+            <button type="button" class="marker-btn selected" data-marker-border="square" title="Square"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="4" width="16" height="16" rx="0"/></svg></button>
+            <button type="button" class="marker-btn" data-marker-border="rounded" title="Rounded"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="4" width="16" height="16" rx="3"/></svg></button>
+            <button type="button" class="marker-btn" data-marker-border="circle" title="Circle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="4"/></svg></button>
+          </div>
+        </div>
+        <div class="opt-row marker-opts">
+          <div class="lbl">marker center</div>
+          <div class="btn-g">
+            <button type="button" class="marker-btn selected" data-marker-center="square" title="Square"><svg viewBox="0 0 24 24" fill="currentColor"><rect x="8" y="8" width="8" height="8"/></svg></button>
+            <button type="button" class="marker-btn" data-marker-center="circle" title="Circle"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="4"/></svg></button>
+          </div>
+        </div>
+      </div><!-- /pane-style -->
+
+      <div class="tab-pane" id="pane-options">
       <!-- Options -->
       <div class="opts">
 
@@ -586,9 +769,19 @@ input[type=color] { position: absolute; width: 0; height: 0; opacity: 0; pointer
           <button class="btn btn-reset" id="btn-reset" type="button">Reset to default</button>
         </div>
 
-      </div>
+        <div class="opt-row logo-row">
+          <div class="lbl">logo (optional)</div>
+          <div class="logo-upload">
+            <input type="file" id="inp-logo" accept="image/*" hidden>
+            <button type="button" class="btn btn-upload" id="btn-logo">Choose image</button>
+            <span class="logo-name" id="logo-name"></span>
+            <button type="button" class="btn btn-remove-logo" id="btn-remove-logo" style="display:none">Remove</button>
+          </div>
+        </div>
 
-      <!-- Generate button -->
+      </div><!-- /pane-options -->
+
+      <!-- Generate button (visible in all tabs) -->
       <button class="btn-gen" id="btn-gen">
         <svg width="14" height="14" viewBox="0 0 14 14" fill="none"
              stroke="currentColor" stroke-width="1.6"
@@ -602,13 +795,11 @@ input[type=color] { position: absolute; width: 0; height: 0; opacity: 0; pointer
         generate
       </button>
 
-    </div><!-- /left -->
+    </aside><!-- /left -->
 
     <div class="col-div"></div>
 
-    <!-- ── Right Panel ── -->
-    <div class="right">
-
+    <section class="right card">
       <!-- Preview -->
       <div class="preview-zone" id="preview-zone">
         <div class="qr-wrap" id="qr-wrap">
@@ -619,6 +810,12 @@ input[type=color] { position: absolute; width: 0; height: 0; opacity: 0; pointer
             <div class="ph-txt">press generate</div>
           </div>
         </div>
+      </div>
+
+      <!-- Style picker (shown after generate) -->
+      <div class="style-picker" id="style-picker">
+        <div class="lbl">choose style</div>
+        <div class="style-options" id="style-options"></div>
       </div>
 
       <!-- Actions -->
@@ -651,8 +848,8 @@ input[type=color] { position: absolute; width: 0; height: 0; opacity: 0; pointer
         <div class="hist-row" id="hist-row"></div>
       </div>
 
-    </div><!-- /right -->
-  </div>
+    </section><!-- /right -->
+  </main>
 </div>
 
 <div class="toast" id="toast"></div>
@@ -663,8 +860,11 @@ import QRCode from 'https://esm.sh/qrcode@1.5.4';
 /* ── State ────────────────────────────────────────────────── */
 const DEFAULT_SETTINGS = { type:'url', fg:'#000000', bg:'#ffffff', size:400, ecc:'M', fmt:'png' };
 const S = { type:DEFAULT_SETTINGS.type, data:'', fg:DEFAULT_SETTINGS.fg, bg:DEFAULT_SETTINGS.bg,
-            size:DEFAULT_SETTINGS.size, ecc:DEFAULT_SETTINGS.ecc, fmt:DEFAULT_SETTINGS.fmt, hasQR:false };
+            size:DEFAULT_SETTINGS.size, ecc:DEFAULT_SETTINGS.ecc, fmt:DEFAULT_SETTINGS.fmt, hasQR:false,
+            logoDataUrl: null, selectedStyle: 'standard',
+            markerBorder: 'square', markerCenter: 'square' };
 const PREV_MAX = 520; /* cap preview pixel size so layout doesn't break */
+const STYLES = ['standard', 'dots', 'rounded', 'instagram'];
 
 /* ── DOM ─────────────────────────────────────────────────── */
 const canvas  = document.getElementById('qr-canvas');
@@ -676,6 +876,8 @@ const btnDl   = document.getElementById('btn-dl');
 const dlLbl   = document.getElementById('dl-lbl');
 const histRow = document.getElementById('hist-row');
 const toastEl = document.getElementById('toast');
+const stylePicker = document.getElementById('style-picker');
+const styleOptions = document.getElementById('style-options');
 
 /* ── Placeholder grid ────────────────────────────────────── */
 (function(){
@@ -695,6 +897,49 @@ document.getElementById('clr-fg-row')
   .addEventListener('click', () => document.getElementById('fg-p').click());
 document.getElementById('clr-bg-row')
   .addEventListener('click', () => document.getElementById('bg-p').click());
+
+/* ── Left panel tabs ─────────────────────────────────────── */
+document.querySelectorAll('.left-tabs .tab').forEach(t => {
+  t.addEventListener('click', () => {
+    const tab = t.dataset.tab;
+    document.querySelectorAll('.left-tabs .tab').forEach(x => x.classList.remove('active'));
+    document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('on'));
+    t.classList.add('active');
+    document.getElementById('pane-' + tab).classList.add('on');
+  });
+});
+
+/* ── Style tab: dot style (syncs with right-panel style picker) ── */
+document.querySelectorAll('[data-dot]').forEach(b => {
+  b.addEventListener('click', () => {
+    document.querySelectorAll('[data-dot]').forEach(x => x.classList.remove('selected'));
+    b.classList.add('selected');
+    S.selectedStyle = b.dataset.dot;
+    if (S.hasQR) { syncStylePickerSelection(); redrawCurrentStyle(); }
+  });
+});
+document.querySelectorAll('[data-marker-border]').forEach(b => {
+  b.addEventListener('click', () => {
+    document.querySelectorAll('[data-marker-border]').forEach(x => x.classList.remove('selected'));
+    b.classList.add('selected');
+    S.markerBorder = b.dataset.markerBorder;
+    if (S.hasQR) generate();
+  });
+});
+document.querySelectorAll('[data-marker-center]').forEach(b => {
+  b.addEventListener('click', () => {
+    document.querySelectorAll('[data-marker-center]').forEach(x => x.classList.remove('selected'));
+    b.classList.add('selected');
+    S.markerCenter = b.dataset.markerCenter;
+    if (S.hasQR) generate();
+  });
+});
+
+function syncStylePickerSelection() {
+  styleOptions.querySelectorAll('.style-option').forEach(el => {
+    el.classList.toggle('selected', el.getAttribute('data-style') === S.selectedStyle);
+  });
+}
 
 /* ── Type pill switching ─────────────────────────────────── */
 document.querySelectorAll('.pill').forEach(p => {
@@ -763,6 +1008,28 @@ document.getElementById('bg-p').addEventListener('input', e => {
 /* ── Generate button ─────────────────────────────────────── */
 btnGen.addEventListener('click', generate);
 
+/* ── Logo ────────────────────────────────────────────────── */
+document.getElementById('btn-logo').addEventListener('click', () => document.getElementById('inp-logo').click());
+document.getElementById('inp-logo').addEventListener('change', async e => {
+  const file = e.target.files[0];
+  if (!file) return;
+  const r = new FileReader();
+  r.onload = async () => {
+    S.logoDataUrl = r.result;
+    document.getElementById('logo-name').textContent = file.name;
+    document.getElementById('btn-remove-logo').style.display = '';
+    if (S.hasQR) await applyLogoToCanvas(canvas);
+  };
+  r.readAsDataURL(file);
+});
+document.getElementById('btn-remove-logo').addEventListener('click', async () => {
+  S.logoDataUrl = null;
+  document.getElementById('inp-logo').value = '';
+  document.getElementById('logo-name').textContent = '';
+  document.getElementById('btn-remove-logo').style.display = 'none';
+  if (S.hasQR) { await redrawCurrentStyle(); }
+});
+
 /* ── Data assembly ───────────────────────────────────────── */
 function getData() {
   switch (S.type) {
@@ -792,6 +1059,234 @@ function getData() {
 }
 
 /* ── Generate ────────────────────────────────────────────── */
+function getOpts(overrides = {}) {
+  return {
+    errorCorrectionLevel: S.ecc,
+    width: Math.min(S.size, PREV_MAX),
+    margin: 1,
+    color: { dark: S.fg, light: S.bg },
+    ...overrides,
+  };
+}
+
+function drawQRToCanvas(canvasEl, data, opts) {
+  return new Promise((resolve, reject) => {
+    QRCode.toCanvas(canvasEl, data, opts, err => (err ? reject(err) : resolve()));
+  });
+}
+
+function detectModuleGrid(sourceCanvas) {
+  const ctx = sourceCanvas.getContext('2d');
+  const w = sourceCanvas.width;
+  const h = sourceCanvas.height;
+  const margin = 1;
+  const data = ctx.getImageData(0, 0, w, h);
+  const row = Math.floor(h / 2);
+  let x = 0;
+  const runs = [];
+  while (x < w) {
+    const idx = (row * w + Math.min(x, w - 1)) * 4;
+    const isDark = data.data[idx] + data.data[idx + 1] + data.data[idx + 2] < 384;
+    let len = 0;
+    const startX = x;
+    while (x < w) {
+      const i = (row * w + x) * 4;
+      const d = data.data[i] + data.data[i + 1] + data.data[i + 2] < 384;
+      if (d !== isDark) break;
+      len++;
+      x++;
+    }
+    if (len >= 1) runs.push(len);
+  }
+  const minRun = runs.length ? (runs.filter(r => r >= 2).length ? Math.min(...runs.filter(r => r >= 2)) : runs[0]) : 1;
+  const cellSize = minRun;
+  const n = Math.round((w - 2 * margin) / cellSize);
+  const nClamped = Math.max(17, Math.min(45, n));
+  return { n: nClamped, cellSize: (w - 2 * margin) / nClamped, margin };
+}
+
+function buildStyledCanvas(sourceCanvas, styleName, fg, bg) {
+  const { n, cellSize, margin } = detectModuleGrid(sourceCanvas);
+  const w = sourceCanvas.width;
+  const h = sourceCanvas.height;
+  const out = document.createElement('canvas');
+  out.width = w;
+  out.height = h;
+  const ctx = out.getContext('2d');
+  ctx.fillStyle = bg;
+  ctx.fillRect(0, 0, w, h);
+  const srcData = sourceCanvas.getContext('2d').getImageData(0, 0, w, h);
+  const isDark = (x, y) => {
+    const px = Math.min(w - 1, Math.max(0, Math.floor(x)));
+    const py = Math.min(h - 1, Math.max(0, Math.floor(y)));
+    const idx = (py * w + px) * 4;
+    return srcData.data[idx] + srcData.data[idx + 1] + srcData.data[idx + 2] < 384;
+  };
+  ctx.fillStyle = fg;
+  for (let i = 0; i < n; i++) {
+    for (let j = 0; j < n; j++) {
+      const cx = margin + (i + 0.5) * cellSize;
+      const cy = margin + (j + 0.5) * cellSize;
+      if (!isDark(cx, cy)) continue;
+      if (styleName === 'dots') {
+        ctx.beginPath();
+        ctx.arc(cx, cy, cellSize * 0.45, 0, Math.PI * 2);
+        ctx.fill();
+      } else if (styleName === 'instagram') {
+        const r = Math.max(2, cellSize * 0.42);
+        const x = margin + i * cellSize;
+        const y = margin + j * cellSize;
+        ctx.beginPath();
+        if (ctx.roundRect) {
+          ctx.roundRect(x, y, cellSize, cellSize, r);
+        } else {
+          ctx.rect(x, y, cellSize, cellSize);
+        }
+        ctx.fill();
+      } else {
+        const r = Math.max(1, cellSize * 0.25);
+        const x = margin + i * cellSize;
+        const y = margin + j * cellSize;
+        ctx.beginPath();
+        if (ctx.roundRect) {
+          ctx.roundRect(x, y, cellSize, cellSize, r);
+        } else {
+          ctx.rect(x, y, cellSize, cellSize);
+        }
+        ctx.fill();
+      }
+    }
+  }
+  return out;
+}
+
+function drawMarkerOverlay(canvasEl, n, cellSize, margin, fg, bg, markerBorder, markerCenter) {
+  if (markerBorder === 'square' && markerCenter === 'square') return;
+  const ctx = canvasEl.getContext('2d');
+  const finders = [
+    { x0: margin, y0: margin },
+    { x0: margin + (n - 8) * cellSize, y0: margin },
+    { x0: margin, y0: margin + (n - 8) * cellSize },
+  ];
+  finders.forEach(({ x0, y0 }) => {
+    const cx = x0 + 3.5 * cellSize;
+    const cy = y0 + 3.5 * cellSize;
+    const rOuter = 3.5 * cellSize;
+    const rMid = 2.5 * cellSize;
+    const rInner = 0.5 * cellSize;
+    ctx.fillStyle = bg;
+    ctx.fillRect(x0, y0, 8 * cellSize, 8 * cellSize);
+    if (markerBorder === 'circle') {
+      ctx.fillStyle = fg;
+      ctx.beginPath();
+      ctx.arc(cx, cy, rOuter, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.fillStyle = bg;
+      ctx.beginPath();
+      ctx.arc(cx, cy, rMid, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.fillStyle = fg;
+      ctx.beginPath();
+      ctx.arc(cx, cy, markerCenter === 'circle' ? rInner : rInner * 1.2, 0, Math.PI * 2);
+      ctx.fill();
+    } else if (markerBorder === 'rounded') {
+      const rad = cellSize * 0.4;
+      ctx.fillStyle = fg;
+      ctx.beginPath();
+      if (ctx.roundRect) ctx.roundRect(x0 + 0.5 * cellSize, y0 + 0.5 * cellSize, 7 * cellSize, 7 * cellSize, rad);
+      else ctx.rect(x0 + 0.5 * cellSize, y0 + 0.5 * cellSize, 7 * cellSize, 7 * cellSize);
+      ctx.fill();
+      ctx.fillStyle = bg;
+      ctx.beginPath();
+      if (ctx.roundRect) ctx.roundRect(x0 + 1.5 * cellSize, y0 + 1.5 * cellSize, 5 * cellSize, 5 * cellSize, rad * 0.8);
+      else ctx.rect(x0 + 1.5 * cellSize, y0 + 1.5 * cellSize, 5 * cellSize, 5 * cellSize);
+      ctx.fill();
+      ctx.fillStyle = fg;
+      ctx.beginPath();
+      if (ctx.roundRect) ctx.roundRect(x0 + 2.5 * cellSize, y0 + 2.5 * cellSize, 3 * cellSize, 3 * cellSize, rad * 0.5);
+      else ctx.rect(x0 + 2.5 * cellSize, y0 + 2.5 * cellSize, 3 * cellSize, 3 * cellSize);
+      ctx.fill();
+      ctx.fillStyle = fg;
+      if (markerCenter === 'circle') {
+        ctx.beginPath();
+        ctx.arc(cx, cy, rInner, 0, Math.PI * 2);
+        ctx.fill();
+      } else {
+        ctx.beginPath();
+        if (ctx.roundRect) ctx.roundRect(cx - 0.5 * cellSize, cy - 0.5 * cellSize, cellSize, cellSize, 2);
+        else ctx.rect(cx - 0.5 * cellSize, cy - 0.5 * cellSize, cellSize, cellSize);
+        ctx.fill();
+      }
+    } else {
+      /* markerBorder square, markerCenter circle: redraw finder with circular center */
+      ctx.fillStyle = fg;
+      ctx.fillRect(x0 + 0.5 * cellSize, y0 + 0.5 * cellSize, 7 * cellSize, 7 * cellSize);
+      ctx.fillStyle = bg;
+      ctx.fillRect(x0 + 1.5 * cellSize, y0 + 1.5 * cellSize, 5 * cellSize, 5 * cellSize);
+      ctx.fillStyle = fg;
+      ctx.fillRect(x0 + 2.5 * cellSize, y0 + 2.5 * cellSize, 3 * cellSize, 3 * cellSize);
+      ctx.fillStyle = fg;
+      ctx.beginPath();
+      ctx.arc(cx, cy, rInner, 0, Math.PI * 2);
+      ctx.fill();
+    }
+  });
+}
+
+function applyLogoToCanvas(canvasEl) {
+  if (!S.logoDataUrl) return Promise.resolve();
+  return new Promise((resolve) => {
+    const ctx = canvasEl.getContext('2d');
+    const w = canvasEl.width;
+    const h = canvasEl.height;
+    const logoSize = Math.floor(Math.min(w, h) * 0.22);
+    const pad = Math.floor(logoSize * 0.15);
+    const total = logoSize + pad * 2;
+    const x0 = (w - total) / 2;
+    const y0 = (h - total) / 2;
+    ctx.fillStyle = '#ffffff';
+    ctx.beginPath();
+    if (ctx.roundRect) ctx.roundRect(x0, y0, total, total, 8);
+    else ctx.rect(x0, y0, total, total);
+    ctx.fill();
+    const img = new Image();
+    img.crossOrigin = 'anonymous';
+    img.onload = () => {
+      ctx.drawImage(img, x0 + pad, y0 + pad, logoSize, logoSize);
+      resolve();
+    };
+    img.onerror = () => resolve();
+    img.src = S.logoDataUrl;
+  });
+}
+
+async function buildExportCanvas(size) {
+  const opts = getOpts({ width: size });
+  const temp = document.createElement('canvas');
+  temp.width = size;
+  temp.height = size;
+  await drawQRToCanvas(temp, S.data, opts);
+  let out = temp;
+  if (S.selectedStyle === 'dots' || S.selectedStyle === 'rounded' || S.selectedStyle === 'instagram') {
+    out = buildStyledCanvas(temp, S.selectedStyle, S.fg, S.bg);
+  }
+  const grid = detectModuleGrid(temp);
+  drawMarkerOverlay(out, grid.n, grid.cellSize, grid.margin, S.fg, S.bg, S.markerBorder, S.markerCenter);
+  await applyLogoToCanvas(out);
+  return out;
+}
+
+function redrawCurrentStyle() {
+  const src = S.styleCanvases && S.styleCanvases[S.selectedStyle];
+  if (!src) return Promise.resolve();
+  const w = src.width;
+  const h = src.height;
+  canvas.width = w;
+  canvas.height = h;
+  canvas.getContext('2d').drawImage(src, 0, 0);
+  return applyLogoToCanvas(canvas);
+}
+
 function generate() {
   const data = getData();
   S.data = data;
@@ -799,38 +1294,81 @@ function generate() {
 
   btnGen.classList.add('busy');
   btnGen.textContent = 'generating…';
-
   pzone.classList.remove('scanning');
   void pzone.offsetWidth;
   pzone.classList.add('scanning');
 
-  QRCode.toCanvas(canvas, data, {
-    errorCorrectionLevel: S.ecc,
-    width: Math.min(S.size, PREV_MAX),
-    margin: 1,
-    color: { dark: S.fg, light: S.bg },
-  }, err => {
+  const outSize = Math.min(S.size, PREV_MAX);
+  const opts = getOpts({ width: outSize });
+
+  drawQRToCanvas(canvas, data, opts).then(async () => {
     pzone.classList.remove('scanning');
     btnGen.classList.remove('busy');
-    btnGen.textContent = '';
     setGenLabel('generate');
     try {
-      if (err) { console.error(err); toast('error generating QR'); return; }
+      S.styleCanvases = { standard: document.createElement('canvas') };
+      S.styleCanvases.standard.width = outSize;
+      S.styleCanvases.standard.height = outSize;
+      S.styleCanvases.standard.getContext('2d').drawImage(canvas, 0, 0);
 
-      ph.style.display     = 'none';
+      S.styleCanvases.dots = buildStyledCanvas(canvas, 'dots', S.fg, S.bg);
+      S.styleCanvases.rounded = buildStyledCanvas(canvas, 'rounded', S.fg, S.bg);
+      S.styleCanvases.instagram = buildStyledCanvas(canvas, 'instagram', S.fg, S.bg);
+
+      const grid = detectModuleGrid(canvas);
+      ['standard', 'dots', 'rounded', 'instagram'].forEach(key => {
+        drawMarkerOverlay(S.styleCanvases[key], grid.n, grid.cellSize, grid.margin, S.fg, S.bg, S.markerBorder, S.markerCenter);
+      });
+
+      S.selectedStyle = 'standard';
+      ph.style.display = 'none';
       canvas.style.display = 'block';
       canvas.classList.remove('qr-fresh');
       void canvas.offsetWidth;
       canvas.classList.add('qr-fresh');
       S.hasQR = true;
       btnCopy.disabled = false;
-      btnDl.disabled   = false;
+      btnDl.disabled = false;
+
+      await redrawCurrentStyle();
+
+      clearNode(styleOptions);
+      STYLES.forEach(key => {
+        const label = key === 'standard' ? 'Standard' : key === 'dots' ? 'Dots' : key === 'rounded' ? 'Rounded' : 'Instagram';
+        const div = document.createElement('div');
+        div.className = 'style-option' + (key === S.selectedStyle ? ' selected' : '');
+        div.setAttribute('data-style', key);
+        const c = document.createElement('canvas');
+        c.width = Math.min(100, S.styleCanvases[key].width);
+        c.height = Math.min(100, S.styleCanvases[key].height);
+        c.getContext('2d').drawImage(S.styleCanvases[key], 0, 0, c.width, c.height);
+        div.appendChild(c);
+        const name = document.createElement('div');
+        name.className = 'style-name';
+        name.textContent = label;
+        div.appendChild(name);
+        div.addEventListener('click', async () => {
+          S.selectedStyle = key;
+          styleOptions.querySelectorAll('.style-option').forEach(el => el.classList.remove('selected'));
+          div.classList.add('selected');
+          document.querySelectorAll('[data-dot]').forEach(b => b.classList.toggle('selected', b.dataset.dot === key));
+          await redrawCurrentStyle();
+        });
+        styleOptions.appendChild(div);
+      });
+      stylePicker.classList.add('on');
 
       saveHist().catch(() => {});
     } catch (e) {
       console.error(e);
       toast('error generating QR');
     }
+  }).catch(err => {
+    pzone.classList.remove('scanning');
+    btnGen.classList.remove('busy');
+    setGenLabel('generate');
+    console.error(err);
+    toast('error generating QR');
   });
 }
 
@@ -861,11 +1399,13 @@ function setGenLabel(text) {
 btnCopy.addEventListener('click', async () => {
   if (!S.hasQR) return;
   try {
+    await applyLogoToCanvas(canvas);
     const blob = await new Promise(res => canvas.toBlob(res));
     await navigator.clipboard.write([new ClipboardItem({ 'image/png': blob })]);
     toast('copied to clipboard');
   } catch {
     try {
+      await applyLogoToCanvas(canvas);
       await navigator.clipboard.writeText(canvas.toDataURL());
       toast('copied as data URL');
     } catch { toast('copy not supported here'); }
@@ -884,15 +1424,12 @@ function slugify() {
 
 async function dlPNG() {
   try {
-    const url = await new Promise((res, rej) =>
-      QRCode.toDataURL(S.data, {
-        errorCorrectionLevel: S.ecc, width: S.size, margin: 2,
-        color: { dark: S.fg, light: S.bg },
-      }, (e, u) => e ? rej(e) : res(u))
-    );
+    const exportCanvas = await buildExportCanvas(S.size);
+    const url = exportCanvas.toDataURL('image/png');
     const a = document.createElement('a');
     a.download = 'qr-' + slugify() + '.png';
-    a.href = url; a.click();
+    a.href = url;
+    a.click();
     await saveHist();
     toast('downloaded \u2193');
   } catch (e) { console.error(e); }
@@ -900,6 +1437,10 @@ async function dlPNG() {
 
 async function dlSVG() {
   try {
+    if (S.selectedStyle !== 'standard' || S.logoDataUrl) {
+      await dlPNG();
+      return;
+    }
     const svg = await new Promise((res, rej) =>
       QRCode.toString(S.data, {
         type: 'svg', errorCorrectionLevel: S.ecc, width: S.size, margin: 2,
