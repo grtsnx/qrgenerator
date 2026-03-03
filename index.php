@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>qr. — generate. share. connect.</title>
+<title>qr. — generate. share.</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&family=Syne:wght@400;600;800&display=swap" rel="stylesheet">
@@ -280,6 +280,17 @@ input[type=color] { position: absolute; width: 0; height: 0; opacity: 0; pointer
   position: relative;
   overflow: hidden;
 }
+/* Mobile: hide preview until QR is generated, then size to QR */
+@media (max-width: 859px) {
+  .preview-zone {
+    display: none;
+    height: auto;
+    min-height: 0;
+  }
+  .preview-zone.has-qr {
+    display: flex;
+  }
+}
 .preview-zone::before, .preview-zone::after {
   content: '';
   position: absolute;
@@ -486,7 +497,7 @@ input[type=color] { position: absolute; width: 0; height: 0; opacity: 0; pointer
       <button class="pill"        data-type="wifi">wifi</button>
     </nav>
     <div class="hdr-tag">
-      <span class="dot-live"></span>generate · share · connect
+      <span class="dot-live"></span>generate
     </div>
   </header>
 
@@ -565,7 +576,7 @@ input[type=color] { position: absolute; width: 0; height: 0; opacity: 0; pointer
         </div>
 
         <div class="opt-row">
-          <div class="lbl">error correction</div>
+          <div class="lbl">quality</div>
           <div class="btn-g">
             <button class="og"    data-ecc="L">L</button>
             <button class="og on" data-ecc="M">M</button>
@@ -640,6 +651,13 @@ input[type=color] { position: absolute; width: 0; height: 0; opacity: 0; pointer
           </svg>
           <span id="dl-lbl">download png</span>
         </button>
+        <button class="btn" id="btn-share" disabled title="Share QR code" aria-label="Share">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/>
+            <path d="M8.59 13.51l6.83 3.98M15.41 6.51l-6.82 3.98"/>
+          </svg>
+          share
+        </button>
       </div>
 
       <!-- History -->
@@ -673,6 +691,7 @@ const pzone   = document.getElementById('preview-zone');
 const btnGen  = document.getElementById('btn-gen');
 const btnCopy = document.getElementById('btn-copy');
 const btnDl   = document.getElementById('btn-dl');
+const btnShare = document.getElementById('btn-share');
 const dlLbl   = document.getElementById('dl-lbl');
 const histRow = document.getElementById('hist-row');
 const toastEl = document.getElementById('toast');
@@ -825,6 +844,14 @@ function generate() {
       S.hasQR = true;
       btnCopy.disabled = false;
       btnDl.disabled   = false;
+      if (btnShare) btnShare.disabled = false;
+      pzone.classList.add('has-qr');
+
+      if (window.matchMedia('(max-width: 859px)').matches) {
+        requestAnimationFrame(() => {
+          pzone.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        });
+      }
 
       saveHist().catch(() => {});
     } catch (e) {
@@ -877,6 +904,30 @@ btnDl.addEventListener('click', () => {
   if (!S.hasQR) return;
   S.fmt === 'svg' ? dlSVG() : dlPNG();
 });
+
+/* ── Share ────────────────────────────────────────────────── */
+if (btnShare) {
+  btnShare.addEventListener('click', async () => {
+    if (!S.hasQR) return;
+    try {
+      const blob = await new Promise(res => canvas.toBlob(res));
+      const file = new File([blob], 'qr-' + slugify() + '.png', { type: 'image/png' });
+      if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
+        await navigator.share({
+          files: [file],
+          title: 'QR code',
+          text: S.data.slice(0, 100) + (S.data.length > 100 ? '…' : ''),
+        });
+        toast('shared');
+      } else {
+        await navigator.clipboard.write([new ClipboardItem({ 'image/png': blob })]);
+        toast('share not supported — copied to clipboard');
+      }
+    } catch (e) {
+      if (e.name !== 'AbortError') toast('share failed');
+    }
+  });
+}
 
 function slugify() {
   return S.data.replace(/[^a-z0-9]/gi, '-').toLowerCase().slice(0, 28) || 'qrcode';
