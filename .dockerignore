@@ -1,0 +1,10 @@
+# Git and IDE
+.git
+.gitignore
+.dockerignore
+
+# Runtime-generated / local
+temp/*
+*.log
+.env
+.env.*
