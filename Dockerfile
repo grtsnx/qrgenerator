@@ -29,7 +29,7 @@ RUN mkdir -p $WEBROOT/temp && chown -R www-data:www-data $WEBROOT/temp
 
 # Start both: php-fpm in background, nginx in foreground (Render runs one process)
 COPY docker/entrypoint.sh /entrypoint.sh
-RUN chmod +x /entrypoint.sh
+RUN sed -i 's/\r$//' /entrypoint.sh && chmod +x /entrypoint.sh
 
 EXPOSE 10000
 
