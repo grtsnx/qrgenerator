@@ -1,10 +1,30 @@
-<?php header('X-Frame-Options: SAMEORIGIN'); ?><!DOCTYPE html>
+<?php header('X-Frame-Options: SAMEORIGIN');
+$base = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . ($_SERVER['HTTP_HOST'] ?? 'localhost');
+$canonical = $base . ($_SERVER['REQUEST_URI'] ?? '/');
+?><!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>qr. — generate. share.</title>
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="apple-touch-icon" href="favicon.svg">
+<!-- Open Graph -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="qr.">
+<meta property="og:title" content="qr. — generate. share.">
+<meta property="og:description" content="Generate QR codes for URLs, text, WiFi, and more. Custom colors, quality, and format. Free and simple.">
+<meta property="og:url" content="<?php echo htmlspecialchars($canonical); ?>">
+<meta property="og:image" content="<?php echo htmlspecialchars($base); ?>/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="qr. — QR code generator">
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="qr. — generate. share.">
+<meta name="twitter:description" content="Generate QR codes for URLs, text, WiFi, and more. Custom colors, quality, and format.">
+<meta name="twitter:image" content="<?php echo htmlspecialchars($base); ?>/og-image.png">
+<meta name="twitter:image:alt" content="qr. — QR code generator">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&family=Syne:wght@400;600;800&display=swap" rel="stylesheet">
